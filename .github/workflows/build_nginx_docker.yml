@@ -24,4 +24,4 @@ jobs:
           go mod tidy
       
       - name: build
-        run: GOOS=linux GOARCH=amd64 CGO_ENABLED=1 go build -o bin/packetbeat_linux_amd64 packetbeat/main.go
+        run: GOOS=linux GOARCH=amd64 CGO_ENABLED=1 go build -o ./bin/packetbeat_linux_amd64 ./packetbeat/main.go
