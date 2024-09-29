@@ -1,0 +1,22 @@
+name: GitHub Actions crontab
+on:
+  repository_dispatch:
+    types: [docker_images]
+jobs:
+  pull-images:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: login-mvn.jschrj.com
+        uses: docker/login-action@v3
+        with:
+          registry: mvn.jschrj.com
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+      - name: pull-images
+        run: |
+          echo "${{ github.event.client_payload.images }}" | while IFS= read -r line; do
+            docker pull --platform=${{ github.event.client_payload.platform }} ${{ github.event.client_payload.repo }}"$line"
+            docker tag ${{ github.event.client_payload.repo }}"$line" mvn.jschrj.com/${{ github.event.client_payload.platform }}/"$line"
+            docker push mvn.jschrj.com/${{ github.event.client_payload.platform }}/"$line"
+          done
