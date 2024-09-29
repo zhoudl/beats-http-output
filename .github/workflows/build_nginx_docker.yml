@@ -2,25 +2,13 @@ name: Build and Deploy NGINX Docker Image
 
 on:
   push:
-    branches: [ main ] 
+    branches: [ master ] 
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Login to Docker Hub
-        run: |
-          echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
-
-      - name: Build Docker image
-        run: docker build . --file Dockerfile --tag your-dockerhub-username/nginx-image.
-
-      - name: Tag Docker image
-        run: docker tag your-dockerhub-username/nginx-image:latest your-dockerhub-username/nginx-image:${{ github.sha }}
-
-      - name: Push Docker image
-        run: docker push your-dockerhub-username/nginx-image
+      
+      - name: build
+        run: GOOS=linux GOARCH=amd64 CGO_ENABLED=1 go build -o bin/packetbeat_linux_amd64 packetbeat/main.go
