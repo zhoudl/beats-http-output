@@ -26,3 +26,10 @@ jobs:
       
       - name: build
         run: GOOS=linux GOARCH=amd64 CGO_ENABLED=1 go build -o ./bin/packetbeat_linux_amd64 ./packetbeat/main.go
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-artifacts
+          path: bin/
+      
